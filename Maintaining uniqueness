@@ -1,0 +1,34 @@
+ 
+var host = [];                                                                
+var ob = new GlideRecord('u_infra_use_cases');
+ob.addEncodedQuery('u_use_case=morning_checklist^u_sub_type=mc_history^sys_created_onRELATIVEGT@dayofweek@ago@7');
+ob.query();
+var count1 = 0;
+
+while (ob.next()) {
+    var on = ob.u_host_name.toString(); 
+    gs.log('Host Name is ' + on); 
+    host.push(on);
+    count1++;
+}
+
+gs.log('Count is ' + count1);
+
+
+var count = 0;
+var aqua = [];
+var counted = {};
+var gr = new GlideRecord('u_infra_use_cases');
+gr.addQuery('u_host_name', host); 
+gr.query();
+while (gr.next()) {
+    var hn = gr.u_host_name.toString();
+    if (!counted[hn]) {
+        counted[hn] = true;
+        aqua.push(hn);
+        count++;
+    }
+}
+
+gs.print('Unique Host Names are: ' + aqua);
+gs.print('Count of Unique Host Names is: ' + count);
